@@ -1,12 +1,15 @@
 import pygame as pg
+from scenes.main_menu.main_menu import SceneMainMenu
 
 class GameWindow:
     
     def __init__(self):
         pg.init()
         self.window = pg.display.set_mode([1280, 720])
+        self.surface = pg.Surface([1280, 720], pg.SRCALPHA, 32)
+        pg.display.set_caption('Farm Farm yumi')
         self.clock = pg.time.Clock()
-        self.gm = GameManager(self.window)
+        self.gm = GameManager(self.surface)
         self.fullscreen = False
         self.loop()
 
@@ -24,26 +27,29 @@ class GameWindow:
                 else:
                     self.gm.event(event)
             self.gm.update(1)
-            self.window.fill((0, 0, 0))
+            self.surface.fill((0, 0, 0))
             self.gm.draw()
+            self.window.blit(self.surface, (0, 0))
             pg.display.flip()
             self.clock.tick(60)
 
 class GameManager:
 
     def __init__(self, window):
-        self.scene = None #Rellenar
+        self.scene = SceneMainMenu(self) #Rellenar
         self.window = window
         
     def update(self, dt):
-        pass
+        self.scene.update(dt)
 
     def draw(self):
-        pass
+        self.scene.draw()
 
     def event(self, event):
-        pass
+        self.scene.event(event)
 
+    def change_scene(self, scene):
+        self.scene = scene(self)
     
 if __name__ == "__main__":
     GameWindow()
